@@ -1,9 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
-  <h1>{{ post.title }}</h1>
-  <p class="date">
-    Published {{ post.publish }} by {{ post.author }}
-  </p>
-  {{ post.body|linebreaks }}
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center ">
+            <a class="btn btn-link back-link" href="{% url 'blog:post_list' %}">
+                <img class="me-2" src="{% static 'images/arrow.svg' %}" alt="logo" width="40">
+            </a>
+            <h1>{{ post.title }}</h1>
+        </div>
+
+        <div>
+            Published {{ post.publish }} by {{ post.author }}
+        </div>
+    </div>
+    {{ post.body|linebreaks }}
 {% endblock %}

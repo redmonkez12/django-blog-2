@@ -1,0 +1,54 @@
+body, :root {
+    height: 100vh;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+}
+
+footer {
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+}
+
+.cards {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+}
+
+.card {
+    max-width: 300px;
+    width: 100%;
+}
+
+main {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+footer div {
+    font-size: 0.9rem;
+}
+
+.back-link {
+    padding-left: 0;
+}
+
+.back-link img {
+    width: 32px;
+}

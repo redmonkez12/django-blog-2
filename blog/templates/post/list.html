@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}My Blog{% endblock %}
+{% block title %}The blog{% endblock %}
+
 {% block content %}
-  <h1>My Blog</h1>
-  {% for post in posts %}
-    <h2>
-      <a href="{% url 'blog:post_detail' post.id %}">
-        {{ post.title }}
-      </a>
-    </h2>
-    <p class="date">
-      Published {{ post.publish }} by {{ post.author }}
-    </p>
-    {{ post.body|truncatewords:30|linebreaks }}
-  {% endfor %}
+    <div class="cards">
+        {% for post in posts %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">Published {{ post.publish_at }} by {{ post.author }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-warning w-100">More</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

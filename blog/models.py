@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.urls import reverse
 
 
 class PublishedManager(models.Manager):
@@ -38,6 +39,17 @@ class Post(models.Model):
         indexes = [
             models.Index(fields=["-publish_at"]),
         ]
+
+    def get_absolute_url(self):
+        return reverse(
+            "blog:post_detail",
+            args=[
+                self.publish_at.year,
+                self.publish_at.month,
+                self.publish_at.day,
+                self.slug
+            ]
+        )
 
     def __str__(self):
         return self.title
