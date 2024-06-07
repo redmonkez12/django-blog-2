@@ -8,6 +8,14 @@ body, :root {
     flex-direction: column;
 }
 
+h1 {
+    margin: 0;
+}
+
+.container > main {
+    flex: 1;
+}
+
 a {
     text-decoration: none;
 }
@@ -50,5 +58,15 @@ footer div {
 }
 
 .back-link img {
-    width: 32px;
+    width: 2rem;
+}
+
+header img {
+    width: 2.75rem !important;
+}
+
+@media (max-width: 760px) {
+    .back-link img {
+        width: 1rem;
+    }
 }

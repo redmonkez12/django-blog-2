@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Register user{% endblock %}
+{% block content %}
+<div class="row p-5">
+   <h1 class="text-center mb-4">New account</h1>
+
+    <div class="col-4 mx-auto">
+        <form method="post" class="d-flex flex-column">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.username.errors }}
+                <label class="mb-1" for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.first_name.errors }}
+                <label class="mb-1" for="{{ form.first_name.id_for_label }}">First Name</label>
+                {{ form.first_name }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.email.errors }}
+                <label class="mb-1" for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.password.errors }}
+                <label class="mb-1" for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.password2.errors }}
+                <label class="mb-1" for="{{ form.password2.id_for_label }}">Repeat Password</label>
+                {{ form.password2 }}
+            </div>
+
+            {% csrf_token %}
+            <button class="btn btn-primary w-100">Register</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
