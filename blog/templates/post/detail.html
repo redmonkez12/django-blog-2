@@ -20,7 +20,7 @@
     <div>
         {% with comments.count as total_comments %}
             <h2>
-                {{ total_comments }} comment{{ total_comments|pluralize }}
+                <span class="comment-count">{{ total_comments }}</span> comment{{ total_comments|pluralize }}
             </h2>
         {% endwith %}
 
@@ -29,12 +29,21 @@
         {% endif %}
 
         {% for comment in comments %}
-            <div class="comment">
-                <p class="info">
-                    Comment {{ forloop.counter }} by {{ comment.profile.user.username }}
-                    {{ comment.created }}
-                </p>
+            <div class="delete-post-{{ comment.id }}">
+                <div class="d-flex gap-2">
+                    <p>
+                        Comment {{ forloop.counter }} by {{ comment.user.username }}
+                        {{ comment.created }}
+                    </p>
+
+                    {% if request.user.is_authenticated  and request.user.id == comment.user.id %}
+                        <i class="bi bi-trash icon" data-bs-toggle="modal"
+                           data-bs-target="#remove-comment-{{ comment.id }}"></i>
+                    {% endif %}
+                </div>
+
                 {{ comment.body|linebreaks }}
+                {% include "partials/delete_comment.html" with comment_id=comment.id %}
             </div>
         {% empty %}
             <p>There are no comments.</p>

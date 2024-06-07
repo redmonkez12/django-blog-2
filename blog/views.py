@@ -1,15 +1,24 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404, HttpResponse
 from django.views.decorators.http import require_POST
+from django.contrib import messages
+from taggit.models import Tag
 
 from blog.forms import UserRegistrationForm, CommentForm
-from blog.models import Post, Profile
+from blog.models import Post, Profile, Comment
 
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     post_list = Post.published.all()
-    paginator = Paginator(post_list, 1)
+
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=[tag])
+
+    paginator = Paginator(post_list, 2)
     page_number = request.GET.get('page', 1)
     try:
         posts = paginator.page(page_number)
@@ -20,7 +29,7 @@ def post_list(request):
     return render(
         request,
         "post/list.html",
-        {"posts": posts}
+        {"posts": posts, "tag": tag},
     )
 
 
@@ -61,25 +70,50 @@ def register(request):
 
 @require_POST
 def post_comment(request, post_id):
-    post = get_object_or_404(
-        Post,
-        id=post_id,
-        status=Post.Status.PUBLISHED
-    )
-    comment = None
-    form = CommentForm(data=request.POST)
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.post = post
-        comment.profile = request.user.profile
-        comment.save()
+    try:
+        post = get_object_or_404(
+            Post,
+            id=post_id,
+            status=Post.Status.PUBLISHED
+        )
+        comment = None
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
 
-    return render(
-        request,
-        "post/comment.html",
-        {
-            "post": post,
-            "form": form,
-            "comment": comment
-        }
-    )
+        return render(
+            request,
+            "post/comment.html",
+            {
+                "post": post,
+                "form": form,
+                "comment": comment
+            }
+        )
+    except Post.DoesNotExist:
+        messages.error(
+            request,
+            "Invalid post."
+        )
+    except Exception:
+        messages.error(
+            request,
+            "Cannot create comment. Please try again."
+        )
+
+    return redirect("blog:post_list")
+
+
+@login_required
+@require_POST
+def delete_comment(request, id):
+    try:
+        comment = get_object_or_404(Comment, id=id, user=request.user)
+        comment.delete()
+        return HttpResponse("ok")
+    except Exception:
+        return HttpResponse("error", status=400)
+

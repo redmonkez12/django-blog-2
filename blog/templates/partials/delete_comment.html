@@ -1,0 +1,55 @@
+<div class="modal" tabindex="-1" id="remove-comment-{{ comment_id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to remove the comment?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector("#remove-comment-{{ comment_id }} .btn-danger").addEventListener("click", () => {
+        fetch("/blog/comment/{{ comment_id }}/remove", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({}),
+        }).then(() => {
+            document.querySelector("#remove-comment-{{ comment_id }} .btn-secondary").click();
+            document.querySelector(".delete-post-{{ comment_id }}").remove();
+            const toast = document.querySelector(".toast");
+            const commentCount = document.querySelector(".comment-count");
+            commentCount.innerHTML = Number(commentCount.innerText) - 1;
+
+            toast.querySelector(".toast-body").innerHTML = "Comment was successfully removed.";
+            const bootstrapToast = bootstrap.Toast.getOrCreateInstance(toast);
+            bootstrapToast.show();
+
+            setTimeout(() => {
+                bootstrapToast.dispose();
+            }, 3000);
+        })
+            .catch(() => {
+                const toast = document.querySelector(".toast");
+                toast.querySelector(".toast-body").innerHTML = "Cannot remove toast. Try again.";
+                const bootstrapToast = bootstrap.Toast.getOrCreateInstance(toast);
+                bootstrapToast.show();
+
+                setTimeout(() => {
+                    bootstrapToast.dispose();
+                }, 3000);
+            });
+    });
+</script>

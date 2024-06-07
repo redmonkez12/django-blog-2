@@ -65,8 +65,18 @@ header img {
     width: 2.75rem !important;
 }
 
+.icon {
+    cursor: pointer;
+}
+
 @media (max-width: 760px) {
     .back-link img {
         width: 1rem;
     }
+}
+
+.toast-wrapper {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
 }
