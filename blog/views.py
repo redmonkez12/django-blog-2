@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404, HttpResponse
 from django.views.decorators.http import require_POST
@@ -43,13 +44,26 @@ def post_detail(request, year, month, day, post):
         )
         comments = post.comments.filter(active=True)
 
+        post_tags_ids = post.tags.values_list("id", flat=True)  # new
+        similar_posts = Post.published.filter(
+            tags__in=post_tags_ids
+        ).exclude(id=post.id)
+        similar_posts = similar_posts.annotate(
+            same_tags=Count("tags")
+        ).order_by("-same_tags", "-publish_at")[:4]
+
         form = CommentForm()
     except Post.DoesNotExist:
         raise Http404("No Post found.")
     return render(
         request,
         "post/detail.html",
-        {"post": post, "form": form, "comments": comments}
+        {
+            "post": post,
+            "form": form,
+            "comments": comments,
+            "similar_posts": similar_posts,
+        }
     )
 
 
@@ -116,4 +130,3 @@ def delete_comment(request, id):
         return HttpResponse("ok")
     except Exception:
         return HttpResponse("error", status=400)
-
