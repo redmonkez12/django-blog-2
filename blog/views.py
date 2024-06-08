@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,7 +8,7 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from taggit.models import Tag
 
-from blog.forms import UserRegistrationForm, CommentForm
+from blog.forms import UserRegistrationForm, CommentForm, ProfileEditForm, ContactForm
 from blog.models import Post, Profile, Comment
 
 
@@ -130,3 +131,48 @@ def delete_comment(request, id):
         return HttpResponse("ok")
     except Exception:
         return HttpResponse("error", status=400)
+
+
+@login_required
+def user_profile(request):
+    if request.method == "POST":
+        profile_form = ProfileEditForm(
+            instance=request.user.profile,
+            data=request.POST,
+            files=request.FILES
+        )
+        if profile_form.is_valid():
+            profile_form.save()
+
+        return redirect("blog:post_list")
+    else:
+        profile_form = ProfileEditForm(instance=request.user.profile)
+
+    return render(request, "account/settings.html", {"profile_form": profile_form})
+
+
+def about(request):
+    return render(request, "others/about.html")
+
+
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            message = form.cleaned_data["message"]
+
+            send_mail(
+                f"Contact Form Submission from {name}",
+                message,
+                email,
+                ["kayahots@gmail.com"],
+                fail_silently=False,
+            )
+
+            return redirect("blog:contact_thank_you")
+    else:
+        form = ContactForm()
+
+    return render(request, "others/contact.html", {"form": form})

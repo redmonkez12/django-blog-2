@@ -36,12 +36,27 @@
         </a>
 
         {% if request.user.is_authenticated %}
-            <div class="d-flex align-items-center gap-4">
-                <div>{{ request.user.username }}</div>
-                <form action="{% url 'logout' %}" method="post">
-                    <button class="btn btn-secondary">Logout</button>
-                    {% csrf_token %}
-                </form>
+            <div class="dropdown">
+                <div data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if request.user.profile.photo %}
+                        <img class="profile-image" src="{{ request.user.profile.photo.url }}" alt="Profile image">
+                    {% else %}
+                        <div>{{ request.user.username }}</div>
+                    {% endif %}
+                </div>
+                <ul class="dropdown-menu">
+                    <li>
+                        <form class="dropdown-item" action="{% url 'logout' %}" method="post">
+                            <button class="btn">Logout</button>
+                            {% csrf_token %}
+                        </form>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <a class="btn" href="{% url 'blog:user_profile' %}">Settings</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
@@ -62,11 +77,16 @@
     </main>
 
     <footer class="d-flex flex-wrap align-items-center justify-content-between py-3 border-top">
-        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+        <a href="/" class="footer-logo d-flex align-items-center link-body-emphasis text-decoration-none">
             <img class="me-2" src="{% static 'images/logo.png' %}" alt="logo" width="40">
             <span class="fs-4">The Blog</span>
         </a>
 
+        <div class="d-flex">
+            <a class="btn btn-link" href="{% url 'blog:about' %}">About</a>
+            <a class="btn btn-link" href="{% url 'blog:contact' %}">Contact</a>
+        </div>
+        
         <div>Made by - Your name</div>
     </footer>
 
@@ -74,7 +94,7 @@
         <div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
-                    
+
                 </div>
                 <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>

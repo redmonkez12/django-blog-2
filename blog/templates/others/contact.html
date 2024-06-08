@@ -1,0 +1,35 @@
+<!-- contact.html -->
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+    <h1>Contact Us</h1>
+    <div class="col-md-6 col-12">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="mb-3">
+                {{ form.name.errors }}
+                <label for="{{ form.name.id_for_label }}">Name</label>
+                {{ form.name|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.email.errors }}
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.message.errors }}
+                <label for="{{ form.message.id_for_label }}">Message</label>
+                {{ form.message|add_class:"form-control" }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+{% endblock %}

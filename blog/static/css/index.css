@@ -37,6 +37,7 @@ footer {
     display: flex;
     gap: 1rem;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .card {
@@ -73,10 +74,58 @@ header img {
     .back-link img {
         width: 1rem;
     }
+
+    .cards {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .back-link img {
+        width: 1rem;
+    }
+
+    .cards > div {
+        min-width: 100%;
+        flex: 1;
+    }
+
+    .footer-logo {
+        display: none !important;
+    }
 }
 
 .toast-wrapper {
     position: absolute;
     right: 1rem;
     bottom: 1rem;
+}
+
+.profile-image {
+    border-radius: 50%;
+}
+
+.dropdown {
+    cursor: pointer;
+    z-index: 99;
+}
+
+.dropdown .dropdown-item:focus, .dropdown .dropdown-item:hover {
+    background-color: white !important;
+}
+
+.dropdown .btn:focus {
+    outline: none;
+    border: none;
+}
+
+header {
+    z-index: 1;
+}
+
+.image-upload > label,
+.image-upload > a,
+.image-upload #photo-clear_id,
+.image-upload br {
+    display: none;
 }
