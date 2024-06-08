@@ -35,10 +35,6 @@
             </h2>
         {% endwith %}
 
-        {% if not request.user.is_authenticated %}
-            <div>To add comments you need to be logged in.</div>
-        {% endif %}
-
         {% for comment in comments %}
             <div class="delete-post-{{ comment.id }}">
                 <div class="d-flex gap-2">
@@ -59,6 +55,11 @@
         {% empty %}
             <p>There are no comments.</p>
         {% endfor %}
-        {% include "partials/comment_form.html" %}
+
+        {% if not request.user.is_authenticated %}
+            <div>To add comments you need to be logged in.</div>
+        {% else %}
+            {% include "partials/comment_form.html" %}
+        {% endif %}
     </div>
 {% endblock %}

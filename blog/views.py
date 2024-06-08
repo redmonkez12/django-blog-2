@@ -83,6 +83,7 @@ def register(request):
     return render(request, "account/register.html", {"form": user_form})
 
 
+@login_required()
 @require_POST
 def post_comment(request, post_id):
     try:

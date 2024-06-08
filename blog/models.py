@@ -20,7 +20,6 @@ class Profile(models.Model):
         return f"{self.user.username}"
 
 
-
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = "DF", "Draft"
