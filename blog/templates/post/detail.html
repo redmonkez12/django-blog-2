@@ -36,7 +36,7 @@
         {% endwith %}
 
         {% for comment in comments %}
-            <div class="delete-post-{{ comment.id }}">
+            <div class="delete-comment-{{ comment.id }}">
                 <div class="d-flex gap-2">
                     <p>
                         Comment {{ forloop.counter }} by {{ comment.user.username }}
