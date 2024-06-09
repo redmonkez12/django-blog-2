@@ -28,11 +28,11 @@
             body: JSON.stringify({}),
         }).then(() => {
             document.querySelector("#remove-comment-{{ comment_id }} .btn-secondary").click();
-            document.querySelector(".delete-post-{{ comment_id }}").remove();
-            const toast = document.querySelector(".toast");
+            document.querySelector(".delete-comment-{{ comment_id }}").remove();
             const commentCount = document.querySelector(".comment-count");
             commentCount.innerHTML = Number(commentCount.innerText) - 1;
 
+            const toast = document.querySelector(".toast");
             toast.querySelector(".toast-body").innerHTML = "Comment was successfully removed.";
             const bootstrapToast = bootstrap.Toast.getOrCreateInstance(toast);
             bootstrapToast.show();
